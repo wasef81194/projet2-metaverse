@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect, useRef } from 'react';
 
 // Physics
-import { Physics } from '@react-three/cannon';
+import { Debug, Physics } from '@react-three/cannon';
 
 // Three
 import { useThree } from '@react-three/fiber';
@@ -16,6 +16,7 @@ import { OtherPlayerComponent } from '../components/other-player.component';
 
 // Models
 import WorldMap from '../models/map/Map';
+import { Stool } from '../prefabs/stool.prefab';
 
 const DefaultScene = () => {
     const { camera, gl } = useThree();
@@ -50,6 +51,9 @@ const DefaultScene = () => {
             <ambientLight intensity={0.6} />
             {/** Physic objects */}
             <Physics isPaused={false} gravity={[0, -9.81, 0]} tolerance={0} iterations={50} broadphase={'Naive'}>
+                <Debug color="black">
+                    <Stool position={[0, -0.2, 5]} />
+                </Debug>
                 <PlaneComponent />
                 <PlayerComponent position={[0, 1, 0]} key="player" />
                 <Suspense fallback={null}></Suspense>
