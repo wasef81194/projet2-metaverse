@@ -10,14 +10,14 @@ export const useKeyboardHUDControls = () => {
 
     useEffect(() => {
         const handleKeyDown = (e) => {
-            if (e.code === 'Tab') {
+            if (e.code === 'Tab' || e.ctrlKey) {
                 e.preventDefault();
             }
             setKeyUp(null);
             setKeyDown(e.code);
         };
         const handleKeyUp = (e) => {
-            if (e.code === 'Tab') {
+            if (e.code === 'Tab' || e.ctrlKey) {
                 e.preventDefault();
             }
             setKeyDown(null);
