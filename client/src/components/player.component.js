@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { useSphere } from '@react-three/cannon';
+import { useBox, useSphere } from '@react-three/cannon';
 import { useThree, useFrame } from '@react-three/fiber';
 import { Raycaster, Vector3, Euler } from 'three';
 import { useKeyboardControls } from '../hooks/player.hooks';
@@ -23,10 +23,20 @@ export const PlayerComponent = (props) => {
     const isChatting = useSelector((state) => state.interface.isChatting);
     const { camera, scene } = useThree();
     const { moveForward, moveBackward, moveLeft, moveRight, jump, sprint } = useKeyboardControls();
-    const [ref, api] = useSphere(() => ({
+    // const [ref, api] = useSphere(() => ({
+    //     mass: 10,
+    //     fixedRotation: true,
+    //     args: [0.3],
+    //     material: {
+    //         friction: 0,
+    //     },
+    //     ...props,
+    // }));
+
+    const [ref, api] = useBox(() => ({
         mass: 10,
         fixedRotation: true,
-        args: [1],
+        args: [0.5, 1, 0.5],
         material: {
             friction: 0,
         },
@@ -47,6 +57,7 @@ export const PlayerComponent = (props) => {
 
     useEffect(() => {
         server.emit(WebsocketEvent.PlayerAction, { type: 'Rotate', rotation: player.rotation });
+        api.rotation.set(0, player.rotation.y, 0);
     }, [player.rotation]);
 
     useFrame(() => {

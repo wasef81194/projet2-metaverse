@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
 import React, { Suspense, useEffect, useRef } from 'react';
-import { Html } from '@react-three/drei';
+import { Text } from '@react-three/drei';
 import Aj from '../models/aj/Aj';
 import { useSelector } from 'react-redux';
+import { useFrame } from '@react-three/fiber';
 
 export const OtherPlayerComponent = (props) => {
     const player = useSelector((state) => state.players[props.playerId]);
@@ -21,18 +22,21 @@ export const OtherPlayerComponent = (props) => {
         boxRef.current.rotation.order = 'ZYX';
         boxRef.current.rotation.y = player.rotation.y - Math.PI;
     }, [player.rotation]);
+
+    useFrame(({ camera }) => {
+        if (Math.abs(boxRef.current.position.distanceTo(camera.position) > 10)) textRef.current.visible = false;
+        else textRef.current.visible = true;
+        textRef.current.lookAt(camera.position);
+    });
+
     return (
-        <>
-            <mesh ref={boxRef}>
-                <Suspense fallback={null}>
-                    <Aj position={[0, 0, 0]} playerId={props.playerId} />
-                </Suspense>
-                <Html distanceFactor={10} style={{ transform: 'translate(-50%,-800%)' }}>
-                    <div ref={textRef} className="pseudo-label">
-                        {player.username}
-                    </div>
-                </Html>
-            </mesh>
-        </>
+        <mesh ref={boxRef}>
+            <Suspense fallback={null}>
+                <Aj position={[0, 0, 0]} playerId={props.playerId} />
+            </Suspense>
+            <Text ref={textRef} color="black" anchorX="center" anchorY="middle" position={[0, 2, 0]}>
+                {player.username}
+            </Text>
+        </mesh>
     );
 };

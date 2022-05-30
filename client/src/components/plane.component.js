@@ -1,7 +1,7 @@
 import React from 'react';
 import { usePlane } from '@react-three/cannon';
 
-const PlaneComponent = () => {
+const PlaneComponent = ({ ...props }) => {
     /** Plane collider */
     const [ref] = usePlane(() => ({
         rotation: [-Math.PI / 2, 0, 0],
@@ -12,7 +12,7 @@ const PlaneComponent = () => {
     }));
 
     return (
-        <mesh ref={ref} receiveShadow={true} scale={[1000, 1000, 1000]}>
+        <mesh ref={ref} receiveShadow={true} {...props}>
             <planeBufferGeometry />
             <meshPhongMaterial color={'skyblue'} receiveShadow />
         </mesh>
